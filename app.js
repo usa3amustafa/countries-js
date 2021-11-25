@@ -1,13 +1,7 @@
 const countries = document.querySelector('.countries');
-const loaderImg = document.querySelector('#loader-img');
-// const countryName = document.querySelector('.country-name');
-// const continent = document.querySelector('.continent');
-// const population = document.querySelector('.country-population');
-// const language = document.querySelector('.country-language');
-// const timezone = document.querySelector('.country-timezone');
-let request;
+
 const getCountry = function (countryName) {
-  request = new XMLHttpRequest();
+  const request = new XMLHttpRequest();
   request.open('GET', `https://restcountries.com/v3.1/name/${countryName}`);
 
   request.send();
@@ -45,19 +39,25 @@ const getCountry = function (countryName) {
 
     countries.insertAdjacentHTML('beforeend', html);
 
-    request.onload = function () {
-      loaderImg.style.display = 'none';
-    };
-
     countries.classList.remove('hidden');
   });
 };
 
-getCountry('pakistan');
-getCountry('usa');
-getCountry('india');
-getCountry('uk');
-getCountry('japan');
-getCountry('portugal');
-getCountry('canada');
-getCountry('france');
+getCountry(prompt('Enter the country name you want to know about'));
+
+// getCountry('pakistan');
+// getCountry('usa');
+// getCountry('india');
+// getCountry('uk');
+// getCountry('japan');
+// getCountry('portugal');
+// getCountry('canada');
+// getCountry('france');
+// getCountry('turkey');
+// getCountry('zimbabwe');
+// getCountry('australia');
+// getCountry('spain');
+// getCountry('italy');
+// getCountry('chilie');
+// getCountry('ghana');
+// getCountry('bulgaria');
