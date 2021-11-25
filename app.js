@@ -1,5 +1,6 @@
 const countries = document.querySelector('.countries');
 const countryImg = document.querySelector('.country-image');
+const loaderImg = document.querySelector('#loader-img');
 // const countryName = document.querySelector('.country-name');
 // const continent = document.querySelector('.continent');
 // const population = document.querySelector('.country-population');
@@ -46,8 +47,12 @@ const getCountry = function (countryName) {
         </div>`;
 
     countries.insertAdjacentHTML('beforeend', html);
+
     countries.classList.remove('hidden');
   });
+  this.onload = function () {
+    loaderImg.style.display = 'none';
+  };
 };
 
 getCountry('pakistan');
@@ -58,3 +63,6 @@ getCountry('japan');
 getCountry('portugal');
 getCountry('canada');
 getCountry('france');
+getCountry('turkey');
+getCountry('iran');
+getCountry('russia');
