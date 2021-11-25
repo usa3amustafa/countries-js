@@ -1,10 +1,10 @@
 const countries = document.querySelector('.countries');
 const countryImg = document.querySelector('.country-image');
-const countryName = document.querySelector('.country-name');
-const continent = document.querySelector('.continent');
-const population = document.querySelector('.country-population');
-const language = document.querySelector('.country-language');
-const currency = document.querySelector('.country-currency');
+// const countryName = document.querySelector('.country-name');
+// const continent = document.querySelector('.continent');
+// const population = document.querySelector('.country-population');
+// const language = document.querySelector('.country-language');
+// const timezone = document.querySelector('.country-timezone');
 
 console.log(countryImg);
 
@@ -34,12 +34,12 @@ const getCountry = function (countryName) {
                 ).toFixed(1)} M people</span>
               </li>
               <li>
-                <i class="fas fa-language language"></i>
+                <i class="fas fa-city capital-city"></i>                
                 <span class="country-language">${data.capital[0]}</span>
               </li>
               <li>
-                <i class="fas fa-money-bill-wave currency"></i>
-                <span class="country-currency">${data.timezones[0]}</span>
+                <i class="fas fa-clock timezone"></i>
+                <span class="country-timezone">${data.timezones[0]}</span>
               </li>
             </ul>
           </div>
