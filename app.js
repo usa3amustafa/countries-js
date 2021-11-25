@@ -11,7 +11,10 @@ console.log(countryImg);
 
 const getCountry = function (countryName) {
   const request = new XMLHttpRequest();
+
   request.open('GET', `https://restcountries.com/v3.1/name/${countryName}`);
+
+  document.body.className = 'loading';
 
   request.send();
 
@@ -47,12 +50,9 @@ const getCountry = function (countryName) {
         </div>`;
 
     countries.insertAdjacentHTML('beforeend', html);
-
+    document.body.className = '';
     countries.classList.remove('hidden');
   });
-  this.onload = function () {
-    loaderImg.style.display = 'none';
-  };
 };
 
 getCountry('pakistan');
