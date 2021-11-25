@@ -1,20 +1,14 @@
 const countries = document.querySelector('.countries');
-const countryImg = document.querySelector('.country-image');
 const loaderImg = document.querySelector('#loader-img');
 // const countryName = document.querySelector('.country-name');
 // const continent = document.querySelector('.continent');
 // const population = document.querySelector('.country-population');
 // const language = document.querySelector('.country-language');
 // const timezone = document.querySelector('.country-timezone');
-
-console.log(countryImg);
-
+let request;
 const getCountry = function (countryName) {
-  const request = new XMLHttpRequest();
-
+  request = new XMLHttpRequest();
   request.open('GET', `https://restcountries.com/v3.1/name/${countryName}`);
-
-  document.body.className = 'loading';
 
   request.send();
 
@@ -50,7 +44,11 @@ const getCountry = function (countryName) {
         </div>`;
 
     countries.insertAdjacentHTML('beforeend', html);
-    document.body.className = '';
+
+    request.onload = function () {
+      loaderImg.style.display = 'none';
+    };
+
     countries.classList.remove('hidden');
   });
 };
@@ -63,6 +61,3 @@ getCountry('japan');
 getCountry('portugal');
 getCountry('canada');
 getCountry('france');
-getCountry('turkey');
-getCountry('iran');
-getCountry('russia');
