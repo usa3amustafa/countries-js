@@ -21,7 +21,7 @@ const getCountry = function (countryName) {
 
     const html = `<div class="country">
           <div class="country-img">
-            <img src="${data.flags.svg}" alt="" class="country-image" />
+            <img src="${data.flags.png}" alt="" class="country-image" />
           </div>
           <div class="country-details">
             <h2 class="country-name">${data.name.common}</h2>
