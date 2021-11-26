@@ -1,6 +1,22 @@
 const countries = document.querySelector('.countries');
-
+const container = document.querySelector('.container');
 const loaderImage = document.querySelector('#loader-img');
+const btnP = document.querySelector('.btn-container');
+const btn = document.querySelector('.btn');
+
+loaderImage.style.display = 'none';
+container.style.display = 'none';
+
+const renderError = function (msg) {
+  btn.style.display = 'none';
+  loaderImage.style.display = 'none';
+
+  const html = `<h2 class="error-message">
+                  ${msg}
+                </h2>`;
+
+  btnP.insertAdjacentHTML('beforeend', html);
+};
 
 const renderCountry = function (data, className = '') {
   html = `<div class="country ${className}">
@@ -30,30 +46,43 @@ const renderCountry = function (data, className = '') {
         </div>`;
 
   loaderImage.style.display = 'none';
+  btnP.style.display = 'none';
+  container.style.display = 'block';
   countries.insertAdjacentHTML('beforeend', html);
   countries.classList.remove('hidden');
 };
 
 const getCountry = function (country) {
-  fetch(`https://restcountries.com/v3.1/name/${country}`).then(response =>
-    response
-      .json()
-      .then(countryData => {
-        const [data] = countryData;
-        renderCountry(data);
-        const neigbour = data.borders[0];
-        if (!neigbour) return;
-        return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
-      })
-      .then(response => response.json())
-      .then(neigbourCountry => {
-        const [data] = neigbourCountry;
-        renderCountry(data, 'neighbour');
-      })
-  );
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response =>
+      response
+        .json()
+        .then(countryData => {
+          const [data] = countryData;
+          renderCountry(data);
+          const neigbour = data.borders[0];
+          if (!neigbour) return;
+          return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
+        })
+        .then(response => response.json())
+        .then(neigbourCountry => {
+          const [data] = neigbourCountry;
+          renderCountry(data, 'neighbour');
+        })
+    )
+    .catch(err => {
+      console.log(
+        `something went wrong ${err.message} , please try again later`
+      );
+      renderError(`Something Went wrong ${err.message} Please Try again later`);
+    })
+    .finally();
 };
 
-getCountry('usa');
+btn.addEventListener('click', () => {
+  loaderImage.style.display = 'flex';
+  getCountry('usa');
+});
 
 // const getCountryAndNeigbour = function (countryName) {
 //   const request = new XMLHttpRequest();
