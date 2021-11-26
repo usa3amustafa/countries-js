@@ -1,17 +1,9 @@
 const countries = document.querySelector('.countries');
 
-const getCountry = function (countryName) {
-  const request = new XMLHttpRequest();
-  request.open('GET', `https://restcountries.com/v3.1/name/${countryName}`);
+const loaderImage = document.querySelector('#loader-img');
 
-  request.send();
-
-  request.addEventListener('load', function () {
-    const [data] = JSON.parse(this.responseText);
-
-    console.log(data);
-
-    const html = `<div class="country">
+const renderCountry = function (data, className = '') {
+  html = `<div class="country ${className}">
           <div class="country-img">
             <img src="${data.flags.png}" alt="" class="country-image" />
           </div>
@@ -37,27 +29,77 @@ const getCountry = function (countryName) {
           </div>
         </div>`;
 
-    countries.insertAdjacentHTML('beforeend', html);
-
-    countries.classList.remove('hidden');
-  });
+  loaderImage.style.display = 'none';
+  countries.insertAdjacentHTML('beforeend', html);
+  countries.classList.remove('hidden');
 };
 
-getCountry(prompt('Enter the country name you want to know about'));
+const getCountry = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`).then(response =>
+    response
+      .json()
+      .then(countryData => {
+        const [data] = countryData;
+        renderCountry(data);
+        const neigbour = data.borders[0];
+        if (!neigbour) return;
+        return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
+      })
+      .then(response => response.json())
+      .then(neigbourCountry => {
+        const [data] = neigbourCountry;
+        renderCountry(data, 'neighbour');
+      })
+  );
+};
 
-// getCountry('pakistan');
-// getCountry('usa');
-// getCountry('india');
-// getCountry('uk');
-// getCountry('japan');
-// getCountry('portugal');
-// getCountry('canada');
-// getCountry('france');
-// getCountry('turkey');
-// getCountry('zimbabwe');
-// getCountry('australia');
-// getCountry('spain');
-// getCountry('italy');
-// getCountry('chilie');
-// getCountry('ghana');
-// getCountry('bulgaria');
+getCountry('usa');
+
+// const getCountryAndNeigbour = function (countryName) {
+//   const request = new XMLHttpRequest();
+//   request.open('GET', `https://restcountries.com/v3.1/name/${countryName}`);
+
+//   request.send();
+
+//   request.addEventListener('load', function () {
+//     const [data] = JSON.parse(this.responseText);
+
+//     renderCountry(data);
+
+//     const neigbours = data.borders;
+
+//     if (!neigbours) return;
+
+//     for (const neigbour of neigbours) {
+//       const request2 = new XMLHttpRequest();
+//       request2.open('GET', `https://restcountries.com/v3.1/alpha/${neigbour}`);
+
+//       request2.send();
+
+//       request2.addEventListener('load', function () {
+//         const [data] = JSON.parse(this.responseText);
+
+//         renderCountry(data, 'neighbour');
+//       });
+//     }
+//   });
+// };
+
+// getCountry(prompt('Enter the country name you want to know about'));
+
+// getCountryAndNeigbour('pakistan');
+// getCountryAndNeigbour('usa');
+// getCountryAndNeigbour('india');
+// getCountryAndNeigbour('uk');
+// getCountryAndNeigbour('japan');
+// getCountryAndNeigbour('portugal');
+// getCountryAndNeigbour('canada');
+// getCountryAndNeigbour('france');
+// getCountryAndNeigbour('turkey');
+// getCountryAndNeigbour('zimbabwe');
+// getCountryAndNeigbour('australia');
+// getCountryAndNeigbour('spain');
+// getCountryAndNeigbour('italy');
+// getCountryAndNeigbour('ghana');
+// getCountryAndNeigbour('bulgaria');
+// getCountryAndNeigbour('russia');
