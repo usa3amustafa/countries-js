@@ -54,22 +54,19 @@ const renderCountry = function (data, className = '') {
 
 const getCountry = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then(response =>
-      response
-        .json()
-        .then(countryData => {
-          const [data] = countryData;
-          renderCountry(data);
-          const neigbour = data.borders[0];
-          if (!neigbour) return;
-          return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
-        })
-        .then(response => response.json())
-        .then(neigbourCountry => {
-          const [data] = neigbourCountry;
-          renderCountry(data, 'neighbour');
-        })
-    )
+    .then(response => response.json())
+    .then(countryData => {
+      const [data] = countryData;
+      renderCountry(data);
+      const neigbour = data.borders[0];
+      if (!neigbour) return;
+      return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
+    })
+    .then(response => response.json())
+    .then(neigbourCountry => {
+      const [data] = neigbourCountry;
+      renderCountry(data, 'neighbour');
+    })
     .catch(err => {
       console.log(
         `something went wrong ${err.message} , please try again later`
@@ -81,7 +78,7 @@ const getCountry = function (country) {
 
 btn.addEventListener('click', () => {
   loaderImage.style.display = 'flex';
-  getCountry('usa');
+  getCountry(prompt('Enter the country u want to know about'));
 });
 
 // const getCountryAndNeigbour = function (countryName) {
