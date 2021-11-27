@@ -107,7 +107,7 @@ btn.addEventListener('click', () => {
     console.log(lat, lng);
     // fetch(`https://geocode.xyz/52.508,13.381?geoit=json`)
     // fetch(`https://geocode.xyz/19.037,72.873?geoit=json`)
-    fetch(`https://geocode.xyz/-33.933,18.474?geoit=json`);
+    // fetch(`https://geocode.xyz/-33.933,18.474?geoit=json`);
     fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
       .then(response => {
         if (!response.ok)
