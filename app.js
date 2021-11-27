@@ -52,20 +52,52 @@ const renderCountry = function (data, className = '') {
   countries.classList.remove('hidden');
 };
 
+// const getCountry = function (country) {
+//   fetch(`https://restcountries.com/v3.1/name/${country}`)
+//     .then(response => response.json())
+//     .then(countryData => {
+//       const [data] = countryData;
+//       renderCountry(data);
+//       const neigbour = data.borders[0];
+//       if (!neigbour) return;
+//       return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
+//     })
+//     .then(response => response.json())
+//     .then(neigbourCountry => {
+//       const [data] = neigbourCountry;
+//       renderCountry(data, 'neighbour');
+//     })
+//     .catch(err => {
+//       console.log(
+//         `something went wrong ${err.message} , please try again later`
+//       );
+//       renderError(`Something Went wrong ${err.message} Please Try again later`);
+//     })
+//     .finally();
+// };
 const getCountry = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
     .then(response => response.json())
     .then(countryData => {
       const [data] = countryData;
       renderCountry(data);
-      const neigbour = data.borders[0];
+      const neigbour = data.borders;
       if (!neigbour) return;
-      return fetch(`https://restcountries.com/v3.1/alpha/${neigbour}`);
+      return data.borders;
     })
-    .then(response => response.json())
-    .then(neigbourCountry => {
-      const [data] = neigbourCountry;
-      renderCountry(data, 'neighbour');
+    .then(arr => {
+      for (const country of arr) {
+        fetch(`https://restcountries.com/v3.1/alpha/${country}`)
+          .then(response => response.json())
+          .then(countryData => {
+            const [data] = countryData;
+            renderCountry(data, 'neighbour');
+          });
+      }
+      return `neigbours printed succesfully ${arr}`;
+    })
+    .then(msg => {
+      console.log(msg);
     })
     .catch(err => {
       console.log(
