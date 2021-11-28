@@ -99,12 +99,24 @@ const getCountry = function (country) {
     });
 };
 
-const whereAmI = function (lat, lng) {
-  // do reverse geocoding to get country from lat and lng
-  // fetch(`https://geocode.xyz/52.508,13.381?geoit=json`)
-  // fetch(`https://geocode.xyz/19.037,72.873?geoit=json`)
-  // fetch(`https://geocode.xyz/-33.933,18.474?geoit=json`)
-  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+const getPosition = function () {
+  return new Promise(function (res, rej) {
+    navigator.geolocation.getCurrentPosition(res, rej);
+  });
+};
+
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+
+      // do reverse geocoding to get country from lat and lng
+
+      // fetch(`https://geocode.xyz/52.508,13.381?geoit=json`)
+      // fetch(`https://geocode.xyz/19.037,72.873?geoit=json`)
+      // fetch(`https://geocode.xyz/-33.933,18.474?geoit=json`)
+      return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    })
     .then(response => {
       // console.log(response.json());
       if (!response.ok)
@@ -112,8 +124,9 @@ const whereAmI = function (lat, lng) {
       return response.json();
     })
     .then(data => {
-      const { country } = data;
-      getCountry(country);
+      console.log(data);
+      console.log(data.country);
+      getCountry(data.country);
     })
     .catch(err => {
       renderError(`Error ${err.message} , thankyou`);
@@ -121,15 +134,11 @@ const whereAmI = function (lat, lng) {
     })
     .finally(() => {
       console.log('countries and neigbours printed on the base of location');
-    });
+    })
+    .catch(err => renderError(`${err.message}`));
 };
-
-function getPosition(pos) {
-  whereAmI(pos.coords.latitude, pos.coords.longitude);
-}
 
 btn.addEventListener('click', () => {
   loaderImage.style.display = 'flex';
-
-  navigator.geolocation.getCurrentPosition(getPosition);
+  whereAmI();
 });

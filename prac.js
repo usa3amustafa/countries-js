@@ -32,10 +32,34 @@
 
 // newPromise.then(res => console.log(res)).catch(err => console.log(`${err}`));
 
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+
+// wait(3).then(res => console.log('i waited for 5 seconds'));
+
+// navigator.geolocation.getCurrentPosition(
+//   pos => console.log(pos),
+//   err => console.log(err)
+// );
+
+const getPosition = function () {
+  return new Promise(function (res, rej) {
+    navigator.geolocation.getCurrentPosition(res, rej);
   });
 };
 
-wait(3).then(res => console.log('i waited for 5 seconds'));
+getPosition()
+  .then(res => {
+    console.log(res.coords.latitude, res.coords.longitude);
+    return fetch(
+      `https://geocode.xyz/${res.coords.latitude},${res.coords.longitude}?geoit=json`
+    );
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data.country);
+  })
+  .catch(err => console.log(err.message));
