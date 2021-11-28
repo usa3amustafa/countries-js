@@ -99,37 +99,37 @@ const getCountry = function (country) {
     });
 };
 
+const whereAmI = function (lat, lng) {
+  // do reverse geocoding to get country from lat and lng
+  // fetch(`https://geocode.xyz/52.508,13.381?geoit=json`)
+  // fetch(`https://geocode.xyz/19.037,72.873?geoit=json`)
+  // fetch(`https://geocode.xyz/-33.933,18.474?geoit=json`)
+  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+    .then(response => {
+      // console.log(response.json());
+      if (!response.ok)
+        throw Error(`${response.status} please try again in a few seconds`);
+      return response.json();
+    })
+    .then(data => {
+      const { country } = data;
+      getCountry(country);
+    })
+    .catch(err => {
+      renderError(`Error ${err.message} , thankyou`);
+      console.log(`Error ${err.message} , thankyou`);
+    })
+    .finally(() => {
+      console.log('countries and neigbours printed on the base of location');
+    });
+};
+
+function getPosition(pos) {
+  whereAmI(pos.coords.latitude, pos.coords.longitude);
+}
+
 btn.addEventListener('click', () => {
   loaderImage.style.display = 'flex';
-
-  const whereAmI = function (lat, lng) {
-    // do reverse geocoding to get country from lat and lng
-    console.log(lat, lng);
-    // fetch(`https://geocode.xyz/52.508,13.381?geoit=json`)
-    // fetch(`https://geocode.xyz/19.037,72.873?geoit=json`)
-    // fetch(`https://geocode.xyz/-33.933,18.474?geoit=json`);
-    fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
-      .then(response => {
-        if (!response.ok)
-          throw Error(`${response.status} please try again in a few seconds`);
-        return response.json();
-      })
-      .then(data => {
-        const { country } = data;
-        getCountry(country);
-      })
-      .catch(err => {
-        renderError(`Error ${err.message} , thankyou`);
-        console.log(`Error ${err.message} , thankyou`);
-      })
-      .finally(() => {
-        console.log('countries and neigbours printed on the base of location');
-      });
-  };
-
-  function getPosition(pos) {
-    whereAmI(pos.coords.latitude, pos.coords.longitude);
-  }
 
   navigator.geolocation.getCurrentPosition(getPosition);
 });
