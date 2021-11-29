@@ -178,13 +178,52 @@
 
 // getNeigbours('Pakistan');
 
-const position = async function () {
+// const getPosition = async function () {
+//   try {
+//     const res = await getPosition();
+//     console.log(res);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        resolve(pos);
+      },
+      err => {
+        if (err.message === 'User denied Geolocation') {
+          const err = { message: 'please give access to the location' };
+          reject(err);
+        }
+      }
+    );
+  });
+};
+
+const whereIAm = async function () {
   try {
-    const res = await getPosition();
-    console.log(res);
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+    console.log(lat, lng);
+    return `your location is ${lat} , ${lng}`;
   } catch (err) {
     console.log(err);
+    console.log(`${err.message}`);
+
+    throw err.message;
   }
 };
 
-position();
+(async function () {
+  try {
+    const location = await whereIAm();
+    console.log(location);
+  } catch (err) {
+    console.log(err.message);
+  }
+})();
+
+// whereIAm().then(data => console.log(data));

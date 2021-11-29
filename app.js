@@ -68,55 +68,52 @@ const getPosition = function () {
   });
 };
 
-const getCountryName = function () {
-  return new Promise(function (resolve) {
-    const country = prompt('Enter The Country You are currently living in');
-    resolve(country);
+// get JSON
+
+const getJSON = async function (url, errorMsg = 'something went wrong') {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${response.status} ${errorMsg}`);
+  return await response.json();
+};
+
+const renderNeignhbour = async function (countries) {
+  const countriesMap = countries.map(n =>
+    getJSON(`https://restcountries.com/v3.1/alpha/${n}`)
+  );
+  const data = await Promise.all(countriesMap);
+  data.forEach(([d]) => {
+    renderCountry(d, 'neighbour');
   });
+  // const countriesRes = await Promise.all([countriesMap]);
+  // console.log(countriesRes);
 };
 
-const renderNeignhbour = async function (country) {
-  const res = await fetch(`https://restcountries.com/v3.1/alpha/${country}`);
-  const [data] = await res.json();
-  renderCountry(data, 'neighbour');
-};
-
-const whereIAm = async function () {
+const whereIAm = async function (c1, c2, c3) {
   try {
-    const pos = await getPosition();
-    const { latitude: lat, longitude: lng } = pos.coords;
-    console.log(lat, lng);
-
-    const countryName = await getCountryName();
-    const res = await fetch(
-      `https://restcountries.com/v3.1/name/${countryName}`
-    );
-    if (!res.ok) throw new Error('Please enter a valid country name');
-    const [data] = await res.json();
-    renderCountry(data);
-    data.borders.forEach(neighbour => {
-      renderNeignhbour(neighbour);
+    const [[country1], [country2], [country3]] = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+    const countries = [country1, country2, country3];
+    countries.forEach(c => {
+      renderCountry(c);
+      renderNeignhbour(c.borders);
     });
   } catch (err) {
     console.log(err);
     console.log(`${err.message}`);
     renderError(`${err.message}`);
+
+    // throw error of the promise returned from the async promise
+    throw err;
   }
 };
 
 btn.addEventListener('click', () => {
   loaderImage.style.display = 'flex';
-  whereIAm();
+  whereIAm('portugal', 'russia', 'pakistan');
 });
-
-// get JSON
-
-// const getJSON = function (url, errorMsg = 'something went wrong') {
-//   return fetch(url).then(response => {
-//     if (!response.ok) throw new Error(`${response.status} ${errorMsg}`);
-//     return response.json();
-//   });
-// };
 
 // const getCountry = function (country) {
 //   getJSON(`https://restcountries.com/v3.1/name/${country}`, `country not found`)
