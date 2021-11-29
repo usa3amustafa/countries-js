@@ -93,7 +93,6 @@ const whereIAm = async function () {
     );
     if (!res.ok) throw new Error('Please enter a valid country name');
     const [data] = await res.json();
-    console.log(data);
     renderCountry(data);
     data.borders.forEach(neighbour => {
       renderNeignhbour(neighbour);
